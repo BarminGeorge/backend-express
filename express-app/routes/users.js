@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
+let id = 3
 const array = [
   { id: 1, name: 'John Doe', email: 'john@example.com' },
   { id: 2, name: 'Jane Smith', email: 'jane@example.com' },
@@ -25,8 +26,13 @@ router.get('/:id',  function(req, res, next) {
 
 router.post('/', function(req, res, next) { 
   let newUser = req.body;
-  array.push(newUser);
-  res.status(201).json(newUser);
+  id += 1;
+  const createdUser = {
+    id: id,
+    name: newUser.name
+  };
+  array.push(createdUser);
+  res.status(201).json(createdUser);
 });
 
 module.exports = router;
