@@ -14,7 +14,8 @@ const insert = "INSERT INTO users (name) VALUES (?)";
 router.get('/', function(req, res, next) {
   db.all("SELECT id, name FROM users", [], (err, rows) => {
     if (err) {
-      console.log(err);
+      console.error('Database error:', err);
+      return res.status(500).json({ error: 'Internal server error' });
     } else {
       res.send(rows);
     }
@@ -25,8 +26,12 @@ router.get('/:id',  function(req, res, next) {
   const userId = parseInt(req.params.id);
   db.all("SELECT id, name FROM users WHERE id = (?)", [userId], (err, rows) => {
     if (err) {
-      console.log(err);
+      console.error('Database error:', err);
+      return res.status(500).json({ error: 'Internal server error' });
     } else {
+      if (rows.length === 0) {
+        return res.status(404).json({ error: 'User not found' });
+      }
       res.send(rows);
     }
   });
