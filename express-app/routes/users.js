@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-
+let array =[]
 /* GET users listing. */
 router.get('/', function(req, res, next) {
   let array = [];
@@ -13,6 +13,12 @@ router.get('/', function(req, res, next) {
     "name": "Москвина Александра"
   });
   res.send({"array": array});
+});
+
+router.post('/', function(req, res, next) { 
+  let newUser = req.body;
+  array.push(newUser);
+  res.status(201).json(newUser);
 });
 
 module.exports = router;
