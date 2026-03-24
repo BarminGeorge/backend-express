@@ -1,31 +1,40 @@
 const express = require('express');
 const router = express.Router();
 
-const array = [
-  { id: 1, name: 'John Doe', email: 'john@example.com' },
-  { id: 2, name: 'Jane Smith', email: 'jane@example.com' },
-  { id: 3, name: 'Bob Johnson', email: 'bob@example.com' }
-];
+
+const sqlite3 = require('sqlite3').verbose()
+const db = new sqlite3.Database('mydb.db');
+db.run(`CREATE TABLE IF NOT EXISTS users (
+   id INTEGER PRIMARY KEY AUTOINCREMENT,
+   name text)`);
+
+const insert = "INSERT INTO users (name) VALUES (?)";
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-  res.send({"array": array});
+  db.all("SELECT id, name FROM users", [], (err, rows) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.send(rows);
+    }
+  });
 });
 
 router.get('/:id',  function(req, res, next) {
   const userId = parseInt(req.params.id);
-  const user = array.find(u => u.id === userId);
-
-  if (!user) {
-    return res.status(404).json({ error: 'User not found' });
-  }
-
-  res.json(user);
+  db.all("SELECT id, name FROM users WHERE id = (?)", [userId], (err, rows) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.send(rows);
+    }
+  });
 });
 
 router.post('/', function(req, res, next) { 
   let newUser = req.body;
-  array.push(newUser);
+  db.run(insert, [newUser]);
   res.status(201).json(newUser);
 });
 
