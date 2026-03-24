@@ -13,7 +13,18 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
+app.use((req, res, next) => {
+    const auth = req.query.auth;
+    if(auth==='true') {
+        next();
+    }
+    else {
+        res.status(401).json({
+            error: 'Unauthorized',
+            message: 'Authentication required. Please provide ?auth=true in query string.'
+        });
+    }
+});
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
