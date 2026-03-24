@@ -2,6 +2,5 @@ POST http://localhost:3000/users?auth=true
 Content-Type: application/json
 
 {
-   "id": 4,
    "name": "Иван"
 }

@@ -33,7 +33,7 @@ router.get('/:id',  function(req, res, next) {
 });
 
 router.post('/', function(req, res, next) { 
-  let newUser = req.body;
+  let newUser = req.body.name;
   db.run(insert, [newUser]);
   res.status(201).json(newUser);
 });
